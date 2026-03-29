@@ -1,0 +1,17 @@
+# Maven
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
