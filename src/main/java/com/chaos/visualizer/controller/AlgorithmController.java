@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -33,6 +34,13 @@ public class AlgorithmController {
     }
 
     private String[] parseInput(String input) {
-    return input.split(",");
+        return Arrays.stream(input.split(","))
+                .map(String::trim)
+                .toArray(String[]::new);
+    }
+
+    @GetMapping("/bank-sort")
+    public List<String> bankSort(@RequestParam double amount) {
+        return algorithmService.bankSort(amount);
     }
 }

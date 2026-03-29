@@ -141,3 +141,19 @@ button:disabled {
   border-left-color: #4ade80;
   color: #bbf7d0;
 }
+
+.step--gone {
+  border-left-color: #f87171;
+  color: #fca5a5;
+  font-weight: 600;
+}
+
+.card + .card {
+  margin-top: 1.5rem;
+}
+
+.bank-image {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 1.25rem;
+}

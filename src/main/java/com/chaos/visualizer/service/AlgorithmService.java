@@ -42,4 +42,27 @@ public class AlgorithmService {
 
         return steps;
     }
+
+    public List<String> bankSort(double amount) {
+        List<String> steps = new ArrayList<>();
+        steps.add("You deposit $" + amount + ". The bank teller smiles warmly.");
+
+        steps.add("Weeell, thats fantastic. A really smart decision young man." + "We'll put that into a money-market mutual fund.");
+        amount = amount * 0.6;
+        steps.add ("Remaining: $" + amount);
+
+        steps.add("Now we'll reinvest the earnings into foreign currency accounts with compounding interest...");
+        amount = amount * 0.3;
+        steps.add("Remaining: $" + amount);
+
+        steps.add("And it's gone. Poof.");
+        amount = 0;
+
+        steps.add("I'm sorry sir, but this line is for bank members only. " +
+              "You don't have any money invested in this bank, so please leave.");
+        steps.add("Final balance: $" + amount);
+
+        return steps;
+
+    }
 }
