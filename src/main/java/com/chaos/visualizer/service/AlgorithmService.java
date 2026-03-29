@@ -1,5 +1,6 @@
 package com.chaos.visualizer.service;
 
+import com.chaos.visualizer.model.AlgorithmResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -8,16 +9,7 @@ import java.util.List;
 @Service
 public class AlgorithmService {
 
-    /**
-     * Cookie Monster Sort
-     *
-     * The Cookie Monster goes through the string array looking for "cookies".
-     * Any element containing "cookie" or "Cookie" gets collected. The rest are ignored.
-     *
-     * @param input array of strings to process
-     * @return list of strings describing each step
-     */
-    public List<String> cookieMonsterSort(String[] input) {
+    public AlgorithmResponse cookieMonsterSort(String[] input) {
         List<String> steps = new ArrayList<>();
         List<String> cookieJar = new ArrayList<>();
 
@@ -34,22 +26,24 @@ public class AlgorithmService {
             }
         }
 
-        if (cookieJar.isEmpty()) {
-            steps.add("No cookies found. Cookie Monster is devastated.");
-        } else {
-            steps.add("Done! Cookie Monster collected " + cookieJar.size() + " cookie(s): " + cookieJar);
-        }
+        String result = cookieJar.isEmpty()
+                ? "No cookies found. Cookie Monster is devastated."
+                : "Collected " + cookieJar.size() + " cookie(s): " + cookieJar;
 
-        return steps;
+        steps.add(result);
+
+        return new AlgorithmResponse("Cookie Monster Sort", String.join(", ", input), steps, result);
     }
 
-    public List<String> bankSort(double amount) {
+    public AlgorithmResponse bankSort(double amount) {
         List<String> steps = new ArrayList<>();
+
         steps.add("You deposit $" + amount + ". The bank teller smiles warmly.");
 
-        steps.add("Weeell, thats fantastic. A really smart decision young man." + "We'll put that into a money-market mutual fund.");
+        steps.add("Weeell, thats fantastic. A really smart decision young man. " +
+                "We'll put that into a money-market mutual fund.");
         amount = amount * 0.6;
-        steps.add ("Remaining: $" + amount);
+        steps.add("Remaining: $" + amount);
 
         steps.add("Now we'll reinvest the earnings into foreign currency accounts with compounding interest...");
         amount = amount * 0.3;
@@ -59,10 +53,11 @@ public class AlgorithmService {
         amount = 0;
 
         steps.add("I'm sorry sir, but this line is for bank members only. " +
-              "You don't have any money invested in this bank, so please leave.");
-        steps.add("Final balance: $" + amount);
+                "You don't have any money invested in this bank, so please leave.");
 
-        return steps;
+        String result = "Final balance: $" + amount;
+        steps.add(result);
 
+        return new AlgorithmResponse("South Park Bank", String.valueOf(amount), steps, result);
     }
 }

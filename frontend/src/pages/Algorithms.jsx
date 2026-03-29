@@ -52,7 +52,8 @@ export default function Algorithms() {
     try {
       const res = await fetch(`/api/algorithms/cookie-monster?input=${encodeURIComponent(input)}`)
       if (!res.ok) throw new Error(`Server error: ${res.status}`)
-      setSteps(await res.json())
+      const data = await res.json()
+      setSteps(data.steps)
     } catch (e) {
       setError(e.message)
     } finally {
@@ -68,7 +69,8 @@ export default function Algorithms() {
     try {
       const res = await fetch(`/api/algorithms/bank-sort?amount=${bankAmount}`)
       if (!res.ok) throw new Error(`Server error: ${res.status}`)
-      setBankSteps(await res.json())
+      const data = await res.json()
+      setBankSteps(data.steps)
     } catch (e) {
       setBankError(e.message)
     } finally {

@@ -1,5 +1,6 @@
 package com.chaos.visualizer.controller;
 
+import com.chaos.visualizer.model.AlgorithmResponse;
 import com.chaos.visualizer.service.AlgorithmService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/algorithms")
@@ -19,28 +19,20 @@ public class AlgorithmController {
         this.algorithmService = algorithmService;
     }
 
-    /**
-     * GET /api/algorithms/cookie-monster?input=3,4,7,8,2,1
-     *
-     * Returns a step-by-step narration of Cookie Monster Sort.
-     * Defaults to a sample array if no input is provided.
-     */
     @GetMapping("/cookie-monster")
-    public List<String> cookieMonsterSort(
+    public AlgorithmResponse cookieMonsterSort(
             @RequestParam(defaultValue = "chocolate, cookie, pizza, tomato, cookies") String input) {
+        return algorithmService.cookieMonsterSort(parseInput(input));
+    }
 
-        String[] array = parseInput(input);
-        return algorithmService.cookieMonsterSort(array);
+    @GetMapping("/bank-sort")
+    public AlgorithmResponse bankSort(@RequestParam double amount) {
+        return algorithmService.bankSort(amount);
     }
 
     private String[] parseInput(String input) {
         return Arrays.stream(input.split(","))
                 .map(String::trim)
                 .toArray(String[]::new);
-    }
-
-    @GetMapping("/bank-sort")
-    public List<String> bankSort(@RequestParam double amount) {
-        return algorithmService.bankSort(amount);
     }
 }
