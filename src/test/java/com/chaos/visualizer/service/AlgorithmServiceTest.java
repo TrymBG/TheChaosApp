@@ -24,4 +24,13 @@ class AlgorithmServiceTest {
         assertTrue(steps.stream().anyMatch(s -> s.contains("cookie") && s.contains("COOKIE!")));
         assertTrue(steps.stream().anyMatch(s -> s.contains("Cookies") && s.contains("COOKIE!")));
     }
+
+    @Test
+    void bankSortShouldAlwaysEndAtZero() {
+        double initialAmount = 1000.0;
+        List<String> steps = service.bankSort(initialAmount);
+
+        assertTrue(steps.get(steps.size() -1 ).contains("$0.0"));
+        
+    }
 }
