@@ -26,18 +26,13 @@ public class AlgorithmController {
      */
     @GetMapping("/cookie-monster")
     public List<String> cookieMonsterSort(
-            @RequestParam(defaultValue = "3,8,5,2,7,4,1,6") String input) {
+            @RequestParam(defaultValue = "chocolate, cookie, pizza, tomato, cookies") String input) {
 
-        int[] array = parseInput(input);
+        String[] array = parseInput(input);
         return algorithmService.cookieMonsterSort(array);
     }
 
-    private int[] parseInput(String input) {
-        String[] parts = input.split(",");
-        int[] result = new int[parts.length];
-        for (int i = 0; i < parts.length; i++) {
-            result[i] = Integer.parseInt(parts[i].trim());
-        }
-        return result;
+    private String[] parseInput(String input) {
+    return input.split(",");
     }
 }
