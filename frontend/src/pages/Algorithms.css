@@ -23,30 +23,52 @@
   font-size: 0.95rem;
 }
 
-.card {
+/* Algorithm selector grid */
+
+.algorithm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.algo-card {
   background: #1a1a24;
   border: 1px solid #2a2a3a;
   border-radius: 12px;
-  padding: 1.75rem;
-}
-
-.card-header {
+  padding: 1.25rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
-h2 {
-  font-size: 1.15rem;
-  margin-bottom: 0.4rem;
-  color: #facc15;
+.algo-card:hover {
+  border-color: #f97316;
+  background: #1f1f2e;
 }
 
-.description {
-  color: #aaa;
-  font-size: 0.875rem;
+.algo-card--active {
+  border-color: #f97316;
+  background: #1f1f2e;
+}
+
+.algo-icon {
+  font-size: 1.75rem;
+}
+
+.algo-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e8e8f0;
+  margin-bottom: 0.25rem;
+}
+
+.algo-desc {
+  font-size: 0.8rem;
+  color: #888;
   line-height: 1.5;
 }
 
@@ -57,8 +79,16 @@ h2 {
   font-size: 0.75rem;
   font-family: 'Courier New', monospace;
   padding: 0.3rem 0.6rem;
-  white-space: nowrap;
-  flex-shrink: 0;
+  width: fit-content;
+}
+
+/* Runner */
+
+.runner {
+  background: #1a1a24;
+  border: 1px solid #2a2a3a;
+  border-radius: 12px;
+  padding: 1.75rem;
 }
 
 .input-row {
@@ -111,6 +141,8 @@ button:disabled {
   margin-bottom: 1rem;
 }
 
+/* Steps */
+
 .steps {
   list-style: none;
   display: flex;
@@ -148,12 +180,8 @@ button:disabled {
   font-weight: 600;
 }
 
-.card + .card {
-  margin-top: 1.5rem;
-}
-
 .bank-image {
   width: 100%;
   border-radius: 8px;
-  margin-top: 1.25rem;
+  margin-top: 0.25rem;
 }

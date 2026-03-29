@@ -1,7 +1,26 @@
 import { useState, useEffect } from 'react'
 import './Algorithms.css'
 
+const ALGORITHMS = [
+  {
+    id: 'cookie-monster',
+    name: 'Cookie Monster Sort',
+    icon: '🍪',
+    description: 'Scans a list of words for anything containing "cookie" and collects them. Everything else is beneath his notice.',
+    badge: 'O(n) but pointless',
+  },
+  {
+    id: 'bank',
+    name: 'South Park Bank',
+    icon: '🏦',
+    description: 'Deposit your money. Watch it disappear. Get asked to leave.',
+    badge: 'O(your savings)',
+  },
+]
+
 export default function Algorithms() {
+  const [selected, setSelected] = useState(null)
+
   const [input, setInput] = useState('chocolate, cookie, pizza, tomato, cookies')
   const [steps, setSteps] = useState([])
   const [loading, setLoading] = useState(false)
@@ -25,7 +44,7 @@ export default function Algorithms() {
     })
   }, [bankSteps])
 
-  async function runAlgorithm() {
+  async function runCookieMonster() {
     setLoading(true)
     setError(null)
     setSteps([])
@@ -33,8 +52,7 @@ export default function Algorithms() {
     try {
       const res = await fetch(`/api/algorithms/cookie-monster?input=${encodeURIComponent(input)}`)
       if (!res.ok) throw new Error(`Server error: ${res.status}`)
-      const data = await res.json()
-      setSteps(data)
+      setSteps(await res.json())
     } catch (e) {
       setError(e.message)
     } finally {
@@ -50,8 +68,7 @@ export default function Algorithms() {
     try {
       const res = await fetch(`/api/algorithms/bank-sort?amount=${bankAmount}`)
       if (!res.ok) throw new Error(`Server error: ${res.status}`)
-      const data = await res.json()
-      setBankSteps(data)
+      setBankSteps(await res.json())
     } catch (e) {
       setBankError(e.message)
     } finally {
@@ -59,8 +76,12 @@ export default function Algorithms() {
     }
   }
 
-  function handleKeyDown(e) {
-    if (e.key === 'Enter') runAlgorithm()
+  function handleSelect(id) {
+    setSelected(id)
+    setSteps([])
+    setBankSteps([])
+    setError(null)
+    setBankError(null)
   }
 
   return (
@@ -70,95 +91,87 @@ export default function Algorithms() {
         <p>Pick your poison.</p>
       </div>
 
-      <div className="card">
-        <div className="card-header">
-          <div>
-            <h2>Cookie Monster Sort</h2>
-            <p className="description">
-              Scans a list of words for anything containing "cookie" or "Cookie" and collects them.
-              Everything else is beneath his notice.
-            </p>
-          </div>
-          <span className="badge">O(n) but pointless</span>
-        </div>
-
-        <div className="input-row">
-          <input
-            type="text"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="e.g. chocolate,cookie,pizza,broccoli"
-            spellCheck={false}
-          />
-          <button onClick={runAlgorithm} disabled={loading}>
-            {loading ? 'Nom nom...' : 'Run'}
+      <div className="algorithm-grid">
+        {ALGORITHMS.map(algo => (
+          <button
+            key={algo.id}
+            className={`algo-card ${selected === algo.id ? 'algo-card--active' : ''}`}
+            onClick={() => handleSelect(algo.id)}
+          >
+            <span className="algo-icon">{algo.icon}</span>
+            <div>
+              <p className="algo-name">{algo.name}</p>
+              <p className="algo-desc">{algo.description}</p>
+            </div>
+            <span className="badge">{algo.badge}</span>
           </button>
-        </div>
-
-        {error && <p className="error">{error}</p>}
-
-        {steps.length > 0 && (
-          <ol className="steps">
-            {steps.map((step, i) => (
-              <li key={i} className={stepClass(step)}>
-                {step}
-              </li>
-            ))}
-          </ol>
-        )}
+        ))}
       </div>
 
-      <div className="card">
-        <div className="card-header">
-          <div>
-            <h2>South Park Bank</h2>
-            <p className="description">
-              Deposit your money. Watch it disappear. Get asked to leave.
-            </p>
+      {selected === 'cookie-monster' && (
+        <div className="runner">
+          <div className="input-row">
+            <input
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && runCookieMonster()}
+              placeholder="e.g. chocolate,cookie,pizza,broccoli"
+              spellCheck={false}
+            />
+            <button onClick={runCookieMonster} disabled={loading}>
+              {loading ? 'Nom nom...' : 'Run'}
+            </button>
           </div>
-          <span className="badge">O(your savings)</span>
+
+          {error && <p className="error">{error}</p>}
+
+          {steps.length > 0 && (
+            <ol className="steps">
+              {steps.map((step, i) => (
+                <li key={i} className={cookieStepClass(step)}>{step}</li>
+              ))}
+            </ol>
+          )}
         </div>
+      )}
 
-        <div className="input-row">
-          <input
-            type="number"
-            value={bankAmount}
-            onChange={e => setBankAmount(e.target.value)}
-            placeholder="e.g. 1000"
-          />
-          <button onClick={runBankSort} disabled={bankLoading}>
-            {bankLoading ? 'Investing...' : 'Deposit'}
-          </button>
+      {selected === 'bank' && (
+        <div className="runner">
+          <div className="input-row">
+            <input
+              type="number"
+              value={bankAmount}
+              onChange={e => setBankAmount(e.target.value)}
+              placeholder="e.g. 1000"
+            />
+            <button onClick={runBankSort} disabled={bankLoading}>
+              {bankLoading ? 'Investing...' : 'Deposit'}
+            </button>
+          </div>
+
+          {bankError && <p className="error">{bankError}</p>}
+
+          {visibleBankSteps.length > 0 && (
+            <ol className="steps">
+              {visibleBankSteps.map((step, i) =>
+                step.includes('Poof') ? (
+                  <li key={i}>
+                    <img src="/images/SouthParkBank.png" alt="And it's gone" className="bank-image" />
+                  </li>
+                ) : (
+                  <li key={i} className={bankStepClass(step)}>{step}</li>
+                )
+              )}
+            </ol>
+          )}
         </div>
-
-        {bankError && <p className="error">{bankError}</p>}
-
-        {visibleBankSteps.length > 0 && (
-          <ol className="steps">
-            {visibleBankSteps.map((step, i) =>
-              step.includes('Poof') ? (
-                <li key={i}>
-                  <img
-                    src="/images/SouthParkBank.png"
-                    alt="And it's gone"
-                    className="bank-image"
-                  />
-                </li>
-              ) : (
-                <li key={i} className={bankStepClass(step)}>
-                  {step}
-                </li>
-              )
-            )}
-          </ol>
-        )}
-      </div>
+      )}
     </div>
   )
 }
 
-function stepClass(step) {
+function cookieStepClass(step) {
   if (step.includes('COOKIE')) return 'step step--cookie'
   if (step.includes('grumbles')) return 'step step--rejected'
   if (step.includes('Done')) return 'step step--done'
@@ -166,7 +179,6 @@ function stepClass(step) {
 }
 
 function bankStepClass(step) {
-  if (step.includes('Poof') || step.includes("it's gone")) return 'step step--gone'
   if (step.includes('sorry')) return 'step step--rejected'
   if (step.includes('Final balance')) return 'step step--done'
   return 'step'
